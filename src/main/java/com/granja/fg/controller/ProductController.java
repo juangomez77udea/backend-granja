@@ -23,7 +23,6 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
-    //http://localhoost:8080/fg-app/insumos
     @GetMapping("/insumos")
     public List<Product> getProducts() {
         var products = productService.listProducts();
