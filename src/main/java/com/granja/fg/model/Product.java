@@ -23,6 +23,7 @@ public class Product {
     Integer idProduct;
     String type;
     String name;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     Date InDate;
 
