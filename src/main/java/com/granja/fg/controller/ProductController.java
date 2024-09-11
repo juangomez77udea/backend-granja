@@ -1,14 +1,13 @@
 package com.granja.fg.controller;
 
+import com.granja.fg.exception.ValueDontFindException;
 import com.granja.fg.model.Product;
 import com.granja.fg.service.IProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +27,15 @@ public class ProductController {
         var products = productService.listProducts();
         products.forEach((product -> logger.info(product.toString())));
         return products;
+    }
+
+    @GetMapping("/insumos/{idProduct}")
+    public ResponseEntity<Product>
+    getProductById(@PathVariable Integer idProduct){
+       Product product = productService.findProductById(idProduct);
+       if(product == null) {
+           throw new ValueDontFindException("No se encontró el producto con id: " + idProduct);
+       }
+        return ResponseEntity.ok(product);
     }
 }
