@@ -9,4 +9,5 @@ public interface IBatchService {
     Batch findBatchById(Integer idBatch);
     Batch saveBatch(Batch batch);
     void deleteBatch(Batch batch);
+    Batch updateBatchQuantity(Integer idBatch, int cantidadIngresada);
 }

@@ -32,4 +32,9 @@ public class BatchService implements IBatchService {
         batchRepository.delete(batch);
     }
 
+    @Override
+    public Batch updateBatchQuantity(Integer idBatch, int cantidadIngresada) {
+        return null;
+    }
+
 }

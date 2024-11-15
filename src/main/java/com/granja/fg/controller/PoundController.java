@@ -31,9 +31,18 @@ public class PoundController {
     @PostMapping("/estanques")
     public ResponseEntity<Pound> addPound(@RequestBody Pound pound) {
         try {
+            // Validar si el campo averageWeightUnit es nulo
+            if (pound.getAverageWeightUnit() == null) {
+                pound.setAverageWeightUnit(0);  // Asignar un valor por defecto si es nulo
+            }
+
+            // Loguear el objeto para verificar sus valores
             logger.info("Estanque agregado: " + pound.toString());
+
+            // Guardar el estanque
             Pound savedPound = poundService.savePound(pound);
-            logger.info("Estnque guardado con ID:" + savedPound.getIdPound());
+            logger.info("Estanque guardado con ID: " + savedPound.getIdPound());
+
             return ResponseEntity.ok(savedPound);
         } catch (Exception e) {
             logger.error("Error al guardar el estanque", e);
@@ -42,22 +51,31 @@ public class PoundController {
     }
 
 
+
     @PutMapping("/estanques/{idPound}")
     public ResponseEntity<Pound> updatePound(@PathVariable Integer idPound, @RequestBody Pound poundReceived) {
         Pound pound = poundService.findPoundById(idPound);
-        if (pound == null)
-            throw new ValueDontFindException("El id recibido no existe: " +idPound);
+        if (pound == null) {
+            throw new ValueDontFindException("El id recibido no existe: " + idPound);
+        }
+
+        // Validar si el campo averageWeightUnit es nulo antes de actualizar
+        if (poundReceived.getAverageWeightUnit() == null) {
+            poundReceived.setAverageWeightUnit(0);  // Asignar un valor por defecto si es nulo
+        }
+
+        // Actualizar los valores
         pound.setAverageWeightUnit(poundReceived.getAverageWeightUnit());
         pound.setPoundType(poundReceived.getPoundType());
-        pound.setIdPound(idPound);
+        pound.setIdPound(Long.valueOf(String.valueOf(idPound)));
         pound.setQuantityIn(poundReceived.getQuantityIn());
-        pound.setQuantityOut(poundReceived.getQuantityOut());
         pound.setAverageWeightBatch(poundReceived.getAverageWeightBatch());
 
         poundService.savePound(pound);
 
         return ResponseEntity.ok(pound);
     }
+
 
     @DeleteMapping("/estanques/{idPound}")
     public ResponseEntity<Void> deletePound(@PathVariable Integer idPound) {
