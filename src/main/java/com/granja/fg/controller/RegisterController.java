@@ -7,10 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("fg-app/registros")
-@CrossOrigin(value = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 public class RegisterController {
 
     @Autowired
@@ -43,5 +44,19 @@ public class RegisterController {
     public ResponseEntity<Void> deleteRegister(@PathVariable Long id) {
         registerService.deleteRegister(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{dataType}/{timeFrame}")
+    public ResponseEntity<Map<String, List<Object>>> getStatistics(
+            @PathVariable String dataType,
+            @PathVariable String timeFrame) {
+        try {
+            Map<String, List<Object>> statistics = registerService.getStatistics(dataType, timeFrame);
+            return ResponseEntity.ok(statistics);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
